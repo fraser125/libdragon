@@ -7,6 +7,10 @@
 #include "libdragon.h"
 #include "regsinternal.h"
 
+/* TODO: Many more controller and accessories can be supported by this API */
+/* TODO: VRU can be identified, but cannot be used, by this API. */
+/* TODO: See n64ops/controll.txt for additional information to verify */
+
 /**
  * @defgroup controller Controller Subsystem
  * @ingroup libdragon
@@ -97,6 +101,8 @@ static void __SI_DMA_wait(void)
  * @param[out] outblock
  *             The buffer to place the output from the PIF
  */
+ /* TODO: Perf Test this block 
+  * While still "fast enough" it seems with interrupts disabled and the DMA wait it may still "stall" the system.*/
 static void __controller_exec_PIF( void *inblock, void *outblock )
 {
     volatile uint64_t inblock_temp[8];
@@ -240,6 +246,9 @@ void controller_read(struct controller_data * output)
 {
     static unsigned long long SI_read_con_block[8] =
     {
+    	/* TODO: Verify the following 
+    	 * 
+    	 * */
         0xff010401ffffffff,
         0xff010401ffffffff,
         0xff010401ffffffff,
@@ -470,6 +479,20 @@ int get_controllers_present()
     struct controller_data output;
     static unsigned long long SI_read_controllers_block[8] =
     {
+    	/* TODO: This data isn't clear it's "Magic Bytes" 
+    	 * In order it is the following
+    	 * 0xFF UNKNOWN
+    	 * 0x01 is the size of the command being sent
+    	 * 0x04 is the size of the result expected.
+    	 * 0x01 is a command to retrieve controller button + Joystick status
+    	 * 0xFFFFFFFF's is the result of the command
+    	 * 0xFE is the end of packet or similar
+    	 * the 1 is a send now toggle. So this can be set as a seperate step, don't know why but you could.
+    	 *	Maybe set the data at the end of a frame and toggle the send bit at the start of the next?
+    	 * Other Common Command bytes
+    	 * 0xFF0103FF Reset 
+    	 * 0xFF010300 Inquiry (Controller Types)
+    	 * */
         0xff010401ffffffff,
         0xff010401ffffffff,
         0xff010401ffffffff,
@@ -817,6 +840,7 @@ int identify_accessory( int controller )
     {
         switch( ( output.c[controller].data >> 8 ) & 0xFFFF )
         {
+        	/* TODO: How to Identify the Transfer PAK? */
             case 0x0001: /* Mempak/rumblepak/transferpak */
             {
                 /* Init string one */
@@ -863,6 +887,7 @@ int identify_accessory( int controller )
  */
 void rumble_start( int controller )
 {
+	/* TODO: 32 Bytes seems like overkill, I think it only takes 1, but verify*/
     uint8_t data[32];
 
     /* Unsure of why we have to do this multiple times */
