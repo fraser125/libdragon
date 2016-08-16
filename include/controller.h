@@ -41,7 +41,7 @@
 /** @brief VRU present */
 #define ACCESSORY_VRU           3
 /** @} */
-
+/* TODO: #define Gameboy Accessory */
 /**
  * @name SI Error Values
  * @{
@@ -53,6 +53,7 @@
 /** @brief Controller not present */
 #define ERROR_NOT_PRESENT   0x2
 /** @} */
+/* TODO: Other Errors?*/
 
 /** @brief SI Controller Data */
 typedef struct SI_condat
@@ -90,6 +91,7 @@ typedef struct SI_condat
             /** @brief State of the right button */
             unsigned right : 1;
             /** @brief Unused padding bits */
+            /* TODO: Verify if L+R+Z sends one of these bits*/
             unsigned : 2;
             /** @brief State of the L button */
             unsigned L : 1;
