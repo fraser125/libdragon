@@ -90,6 +90,8 @@ void controller_init()
  */
 static void __SI_DMA_wait(void)
 {
+	// Estimate this line to spin for approximately 18,750 CPU Instructions or 1/5,000 of a frame (1 byte TX/ 4 byte RX)
+	// This is based on pure Joybus TX/RX time. There is probably additional overhead in CPU -> RDP -> PIF and CPU <- RDP <- PIF.
     while (SI_regs->status & (SI_STATUS_DMA_BUSY | SI_STATUS_IO_BUSY)) ;
 }
 
