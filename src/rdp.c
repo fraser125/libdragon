@@ -805,6 +805,7 @@ void rdp_draw_filled_triangle( float x1, float y1, float x2, float y2, float x3,
     /* sort vertices by Y ascending to find the major, mid and low edges */
     if( y1 > y2 ) { temp_x = x2, temp_y = y2; y2 = y1; y1 = temp_y; x2 = x1; x1 = temp_x; }
     if( y2 > y3 ) { temp_x = x3, temp_y = y3; y3 = y2; y2 = temp_y; x3 = x2; x2 = temp_x; }
+    // The line below appears to be a copy & paste error of the line 2 above.
     if( y1 > y2 ) { temp_x = x2, temp_y = y2; y2 = y1; y1 = temp_y; x2 = x1; x1 = temp_x; }
 
     /* calculate Y edge coefficients in 11.2 fixed format */
