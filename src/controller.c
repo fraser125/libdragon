@@ -90,8 +90,8 @@ void controller_init()
  */
 static void __SI_DMA_wait(void)
 {
-	// Estimate this line to spin for approximately 18,750 CPU Instructions or 1/5,000 of a frame (1 byte TX/ 4 byte RX)
-	// This is based on pure Joybus TX/RX time. There is probably additional overhead in CPU -> RDP -> PIF and CPU <- RDP <- PIF.
+	// Estimate this line to spin for a minimum 18,750 CPU Instructions or 1/5,000 of a frame (1 byte TX/ 4 byte RX)
+	// This is based on pure Joybus TX/RX time. 
     while (SI_regs->status & (SI_STATUS_DMA_BUSY | SI_STATUS_IO_BUSY)) ;
 }
 
@@ -105,6 +105,11 @@ static void __SI_DMA_wait(void)
  */
  /* TODO: Perf Test this block 
   * While still "fast enough" it seems with interrupts disabled and the DMA wait it may still "stall" the system.*/
+	// The overhead in CPU -> RDP -> PIF and CPU <- RDP <- PIF.
+	// Some documentation mentions 2 ms to get the data back from all 4 controllers or as little as 1.1 ms for a single controller. 
+	// This is certainly in reference to the DMA and other code overhead to setup and make the SI requests.
+	// Note: @ 60 Frame/second = 6.6% to 12% of Frame time "spinning"
+	// 	 @ 30 Frame/second = 3.3% to 6%
 static void __controller_exec_PIF( void *inblock, void *outblock )
 {
     volatile uint64_t inblock_temp[8];
